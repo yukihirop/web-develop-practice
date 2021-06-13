@@ -11,27 +11,27 @@
 
 <body>
   <div id="app">
-    <header id="slack-header" class="h-10 bg-pink-800 flex">
+    <header id="slack-header" class="h-10 bg-pink-800 flex items-center">
       <div id="slack-header-left" class="w-60 flex justify-between">
         <div id="slack-header-left-btn" class="w-20 flex justify-start items-center">
           <div class="rounded-full bg-red-500 h-3 w-3 ml-2 mr-1 px-0"></div>
           <div class="rounded-full bg-yellow-500 h-3 w-3 mx-1 px-0"></div>
           <div class="rounded-full bg-green-500 h-3 w-3 ml-1 px-0"></div>
         </div>
-        <div id="slack-header-left-action" class="w-20 flex justify-between space-x-4 items-center text-gray-100 ">
-          <button class="hover:bg-pink-900 rounded-lg p-1">
+        <div id="slack-header-left-action" class="w-40 flex justify-end space-x-4 items-center text-gray-100 ">
+          <button class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
             </svg>
           </button>
-          <button class="hover:bg-pink-900 rounded-lg p-1">
+          <button class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </button>
-          <button class="hover:bg-pink-900 rounded-lg p-1">
+          <button class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -40,7 +40,33 @@
           </button>
         </div>
       </div>
+      <div id="slack-header-right" class="w-full max-w-full flex justify-between items-center">
+        <div id="slack-header-right-search" class="w-full max-w-full flex justify-start">
+          <button
+            class="mx-3 w-1/2 max-w-full text-gray-300 hover:text-white bg-pink-900 border rounded-lg border-gray-300 p-1 text-center text-gray-100 my-1 focus:outline-none">
+            slack.appを検索する
+          </button>
+          <button class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1 my-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+        </div>
+        <div id="slack-header-right-setting"
+          class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1 mx-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 stroke-1" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
     </header>
+    <div id="slack-content">
+      <div></div>
+    </div>
   </div>
 </body>
 
