@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slackアプリ(Practice)</title>
+  <script src="https://unpkg.com/vue@next"></script>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+    <header id="slack-header" class="h-10 bg-pink-800 flex">
+      <div id="slack-header-left" class="w-60 flex justify-between">
+        <div id="slack-header-left-btn" class="w-20 flex justify-start items-center">
+          <div class="rounded-full bg-red-500 h-3 w-3 ml-2 mr-1 px-0"></div>
+          <div class="rounded-full bg-yellow-500 h-3 w-3 mx-1 px-0"></div>
+          <div class="rounded-full bg-green-500 h-3 w-3 ml-1 px-0"></div>
+        </div>
+        <div id="slack-header-left-action" class="w-20 flex justify-between space-x-4 items-center text-gray-100 ">
+          <button class="hover:bg-pink-900 rounded-lg p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+            </svg>
+          </button>
+          <button class="hover:bg-pink-900 rounded-lg p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+          <button class="hover:bg-pink-900 rounded-lg p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+  </div>
+</body>
+
+</html>
+
+<script>
+  const app = Vue.createApp({
+  })
+
+  app.mount('#app')
+</script>
