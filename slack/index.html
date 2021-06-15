@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Slackアプリ(Practice)</title>
   <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
@@ -82,15 +83,90 @@
         </div>
       </div>
       <div id="slack-channel"
-        class="flex flex-col justify-start h-full w-60 bg-pink-800 border-t border-r border-pink-200 text-white">
+        class="flex flex-col justify-start h-full w-60 bg-pink-800 border-t border-r border-pink-200">
         <div id="slack-userinfo" class="h-12 flex justify-between items-center hover:bg-pink-900 p-2 border-b">
-          <span class="flex items-center font-bold">
-            yukihirop
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clip-rule="evenodd" />
-            </svg>
+          <span class="flex items-center">
+            <p class="font-bold text-white">
+              yukihirop
+            </p>
+            <div class="relative" @click="clickProfileMenu">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+              <div v-show="showProfileMenu" id="profile-menu-dropdown"
+                class="w-60 flex flex-col items-center bg-gray-100 absolute rounded-lg -left-16 top-7">
+                <!-- プロフィール画像 -->
+                <div class="w-full flex items-center justify-start text-black border-b p-2 pl-3">
+                  <div class="w-10 h-10">
+                    <img src="https://avatars.githubusercontent.com/u/11146767?v=4" class="border" />
+                  </div>
+                  <div class="p-2 text-sm">
+                    <div class="font-bold">yukihirop</div>
+                    <div>yukihirop.slack.com</div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center justify-between border-b text-black text-xs p-4 hover:bg-blue-500 hover:text-white">
+                  <div>
+                    <div class="font-bold">メッセージ合計</div>
+                    <small>アップグレードして最初の5300件のメッセージにアクセスする。<a href="https://www.google.com/?hl=ja"
+                        class="font-bold text-blue-500 hover:text-white hover:underline">プランを参照</a></small>
+                  </div>
+                  <div class="slack-usage ml-2">
+                    <canvas class="w-16 h-16" id="usage-chart"></canvas>
+                    <span>1.5万</span>
+                  </div>
+                </div>
+                <div class="w-full text-sm border-b">
+                  <ul class="w-full text-sm py-1">
+                    <li class="py-1 px-4 hover:bg-blue-500 hover:text-white">メンバーを以下に招待: <small>yukihirop</small></li>
+                    <li class="py-1 px-4 hover:bg-blue-500 hover:text-white">チャンネルを作成する</li>
+                  </ul>
+                </div>
+                <div class="w-full text-sm border-b">
+                  <ul class="w-full py-1">
+                    <li class="px-4 py-1 flex justify-between hover:bg-blue-500 hover:text-white">
+                      <div>環境設定</div>
+                      <div>&#8984;,</div>
+                    </li>
+                    <li class="px-4 py-1 flex justify-between hover:bg-blue-500 hover:text-white">
+                      <div>設定と管理</div>
+                      <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="w-full text-sm border-b">
+                  <ul class="w-full py-1">
+                    <li class="px-4 py-1 flex justify-between hover:bg-blue-500 hover:text-white">
+                      <div>ツール</div>
+                      <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="w-full text-sm">
+                  <ul class="w-full py-1">
+                    <li class="px-4 py-1 hover:bg-blue-500 hover:text-white">
+                      <div>以下からサインアウト: <small>yukihirop</small></div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </span>
           <div class="h-8 w-8 rounded-full bg-gray-100">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 m-1 text-pink-900" fill="none" viewBox="0 0 24 24"
@@ -204,14 +280,68 @@
     box-sizing: border-box;
   }
 
+  .slack-usage {
+    position: relative
+  }
+
+  .slack-usage span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    vertical-align: middle;
+    transform: translate(-50%, -50%);
+  }
+
 </style>
 
 </html>
 
 <script>
   const app = Vue.createApp({
+    mounted() {
+      const config = {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [25, 75],
+            backgroundColor: [
+              'rgb(255, 165, 0)',
+              'rgb(255, 38, 0)',
+            ],
+            // https://techracho.bpsinc.jp/_koyama/2018_12_22/67199
+            borderColor: 'transparent'
+          }],
+        },
+        options: {
+          // https://www.it-swarm-ja.com/ja/javascript/chartjs%E3%83%9B%E3%83%90%E3%83%BC%E3%81%A7%E3%81%99%E3%81%B9%E3%81%A6%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95/830269239/
+          tooltips: { enabled: false },
+          hover: { mode: null },
+          segmentShowStroke: false,
+          // https://www.it-swarm-ja.com/ja/javascript/chartjs%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%A6%E3%83%89%E3%83%BC%E3%83%8A%E3%83%84%E3%83%81%E3%83%A3%E3%83%BC%E3%83%88%E3%81%AE%E5%A4%AA%E3%81%95%E3%82%92%E5%A4%89%E3%81%88%E3%82%8B%E6%96%B9%E6%B3%95%E3%81%AF%EF%BC%9F/1044145283/
+          cutoutPercentage: 80,
+          legend: {
+            display: false
+          }
+        },
+      };
+
+      var ctx = document.getElementById('usage-chart').getContext('2d');
+      new Chart(ctx, config);
+
+      // window.onload = function () {
+      //   var ctx = document.getElementById('usage-chart').getContext('2d');
+      //   new Chart(ctx, config);
+      // };
+    },
+    methods: {
+      clickProfileMenu() {
+        this.showProfileMenu = !this.showProfileMenu
+      }
+    },
     data() {
       return {
+        showProfileMenu: false,
         starChannels: [
           {
             id: 1,
