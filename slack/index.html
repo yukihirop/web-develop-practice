@@ -96,7 +96,7 @@
                   d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                   clip-rule="evenodd" />
               </svg>
-              <div v-show="showProfileMenu" id="profile-menu-dropdown"
+              <div id="profile-menu-dropdown"
                 class="w-60 flex flex-col items-center bg-gray-100 absolute rounded-lg -left-16 top-7">
                 <!-- プロフィール画像 -->
                 <div class="w-full flex items-center justify-start text-black border-b p-2 pl-3">
@@ -326,13 +326,10 @@
         },
       };
 
-      var ctx = document.getElementById('usage-chart').getContext('2d');
-      new Chart(ctx, config);
-
-      // window.onload = function () {
-      //   var ctx = document.getElementById('usage-chart').getContext('2d');
-      //   new Chart(ctx, config);
-      // };
+      window.onload = function () {
+        var ctx = document.getElementById('usage-chart').getContext('2d');
+        new Chart(ctx, config);
+      };
     },
     methods: {
       clickProfileMenu() {
