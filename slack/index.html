@@ -97,7 +97,7 @@
                   clip-rule="evenodd" />
               </svg>
               <div id="profile-menu-dropdown"
-                class="w-60 flex flex-col items-center bg-gray-100 absolute rounded-lg -left-16 top-7">
+                class="w-60 flex flex-col items-center bg-gray-100 absolute rounded-lg -left-16 top-10">
                 <!-- プロフィール画像 -->
                 <div class="w-full flex items-center justify-start text-black border-b p-2 pl-3">
                   <div class="w-10 h-10">
@@ -265,7 +265,18 @@
           </ul>
         </div>
       </div>
-      <div id="slack-chat">チャット</div>
+      <div id="slack-chat" class="w-full h-full flex flex-col justify-between">
+        <div id="slack-chat-header" class="h-12 flex items-center py-2 pl-4 border-b">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+              clip-rule="evenodd" />
+          </svg>
+          <span class="font-bold text-bloack">study-web-design</span>
+        </div>
+        <div id="slack-chat-content" class="h-full">コンテント</div>
+        <div id="slack-chat-message" class="h-40 bg-pink-800">メッセージ</div>
+      </div>
     </div>
   </div>
 </body>
