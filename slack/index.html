@@ -7,6 +7,8 @@
   <title>Slackアプリ(Practice)</title>
   <script src="https://unpkg.com/vue@next"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css"
+    integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
@@ -89,14 +91,14 @@
             <p class="font-bold text-white">
               yukihirop
             </p>
-            <div class="relative" @click="clickProfileMenu">
+            <div class="relative z-50" @click="clickProfileMenu">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20"
                 fill="currentColor">
                 <path fill-rule="evenodd"
                   d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                   clip-rule="evenodd" />
               </svg>
-              <div id="profile-menu-dropdown" v-if="false"
+              <div id="profile-menu-dropdown"
                 class="w-60 flex flex-col items-center bg-gray-100 absolute rounded-lg -left-16 top-10">
                 <!-- プロフィール画像 -->
                 <div class="w-full flex items-center justify-start text-black border-b p-2 pl-3">
@@ -309,8 +311,9 @@
           <!-- 今日 -->
           <div
             class="w-16 flex flex-row items-center justify-center sticky top-0 left-1/2 z-10 rounded-lg border bg-white p-1 mt-1 sticky-today">
-            <button class="text-sm font-semibold border-gray-300">今日</button>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-black cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+            <button class="text-sm font-semibold border-gray-300 focus:outline-none">今日</button>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-black cursor-pointer" viewBox="0 0 20 20"
+              fill="currentColor">
               <path fill-rule="evenodd"
                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                 clip-rule="evenodd" />
@@ -333,7 +336,28 @@
             </div>
           </div>
         </div>
-        <div id="slack-chat-message" class="h-40 bg-pink-800">メッセージ</div>
+        <div id="slack-chat-rich-text" class="min-h-40 bg-white p-4">
+          <div contenteditable="true"
+            class="min-h-20 rounded-t-lg border border-b-0 border-gray-400 focus:outline-none p-2 overflow-y-scroll">
+          </div>
+          <div id="slack-chat-rich-text-action"
+            class="flex justify-between items-center rounded-b-lg border border-t-0 border-gray-400 bg-gray-50 p-2">
+            <div id="slack-chat-rich-text-action-left" class="flex justify-start flex-wrap">
+              <button v-for="(richText, index) in richTextCommands" :key="index"
+                class="w-6 h-6 rounded-sm text-gray-200 hover:bg-gray-200 hover:text-gray-800 focus:outline-none">
+                <i class="fa-sm" :class="richText.icon"></i>
+              </button>
+            </div>
+            <div id="slack-chat-rich-text-action-right" class="flex justify-end flex-wrap">
+              <button v-for="(menu, index) in richTextMenus" :key="index"
+                class="w-6 h-6 rounded-sm text-gray-200 hover:bg-gray-200 hover:text-gray-800 focus:outline-none"
+                :class="[{'hover:bg-green-500': menu.submit }, {'hover:text-white': menu.submit}]">
+                <i class="fa-sm"
+                  :class="[menu.icon, { 'text-black': menu.active }, { 'hover:text-white': menu.submit }]"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -411,6 +435,63 @@
     },
     data() {
       return {
+        richTextMenus: [
+          {
+            icon: 'fas fa-font',
+            active: false,
+          },
+          {
+            icon: 'fas fa-at',
+            active: true,
+          },
+          {
+            icon: 'far fa-smile-wink',
+            active: true
+          },
+          {
+            icon: 'fas fa-paperclip',
+            active: true
+          },
+          {
+            icon: 'fa fa-paper-plane',
+            active: false,
+            submit: true
+          }
+        ],
+        richTextCommands: [
+          {
+            icon: 'fas fa-bold',
+            cmd: 'bold'
+          },
+          {
+            icon: 'fas fa-italic',
+            cmd: 'italic'
+          },
+          {
+            icon: 'fas fa-strikethrough',
+            cmd: 'strikeThrough'
+          },
+          {
+            icon: 'fas fa-code',
+            cmd: 'formatBlock'
+          },
+          {
+            icon: 'fas fa-link',
+            cmd: 'craeteLink'
+          },
+          {
+            icon: 'fas fa-list-ol',
+            cmd: 'insertOrderedList'
+          },
+          {
+            icon: 'fas fa-list-ul',
+            cmd: 'insertUnorderedList'
+          },
+          {
+            icon: 'fas fa-quote-right',
+            cmd: 'formatBlock'
+          }
+        ],
         messages: [
           ...[...Array(20)].map((_, i) => ({
             id: i + 1,
