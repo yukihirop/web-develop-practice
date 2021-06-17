@@ -83,7 +83,7 @@
         </div>
       </div>
       <div id="slack-channel"
-        class="flex flex-col justify-start h-full w-60 bg-pink-800 border-t border-r border-pink-200">
+        class="flex flex-col justify-start h-full w-80 bg-pink-800 border-t border-r border-pink-200">
         <div id="slack-userinfo" class="h-12 flex justify-between items-center hover:bg-pink-900 p-2 border-b">
           <span class="flex items-center">
             <p class="font-bold text-white">
@@ -96,7 +96,7 @@
                   d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                   clip-rule="evenodd" />
               </svg>
-              <div id="profile-menu-dropdown"
+              <div id="profile-menu-dropdown" v-if="false"
                 class="w-60 flex flex-col items-center bg-gray-100 absolute rounded-lg -left-16 top-10">
                 <!-- プロフィール画像 -->
                 <div class="w-full flex items-center justify-start text-black border-b p-2 pl-3">
@@ -272,9 +272,67 @@
               d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
               clip-rule="evenodd" />
           </svg>
-          <span class="font-bold text-bloack">study-web-design</span>
+          <span class="font-bold text-black">study-web-design</span>
         </div>
-        <div id="slack-chat-content" class="h-full">コンテント</div>
+        <div id="slack-chat-content" class="h-full overflow-y-auto relative">
+          <div id="slack-chat-content-header" class="h-44 items-center py-2 pl-4 border-b">
+            <div id="slack-chat-content-header-title" class="flex items-center pt-10">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                  clip-rule="evenodd" />
+              </svg>
+              <div class="font-bold text-black text-lg py-2">study-web-design</div>
+            </div>
+            <div class="px-2">6月1日、あなたがこのプライベートチャンネルを作成しました。どんどん活用していきましょう！</div>
+            <div id="slack-chat-content-action" class="flex space-x-4 items-center px-2 py-4">
+              <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 cursor-pointer text-blue-500" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+                <a href="" class="ml-2 cursor-pointer text-blue-500">
+                  説明を追加する
+                </a>
+              </div>
+              <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 cursor-pointer text-blue-500" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+                <a href="" class="ml-2 cursor-pointer text-blue-500">メンバーを追加する</a>
+              </div>
+            </div>
+          </div>
+          <!-- 今日 -->
+          <div
+            class="w-16 flex flex-row items-center justify-center sticky top-0 left-1/2 z-10 rounded-lg border bg-white p-1 mt-1 sticky-today">
+            <button class="text-sm font-semibold border-gray-300">今日</button>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-black cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+          <!-- メッセージ -->
+          <div v-for="(message, index) in messages" :key="index"
+            class="w-full flex flex-row items-center p-4 border-b hover:bg-gray-200">
+            <div class="flex flex-col items-center">
+              <img :src="message.image" class="w-10 h-10">
+            </div>
+            <div class="flex flex-col h-20 ml-4 pt-4">
+              <div>
+                <span class="font-semibold hover:underline">{{ message.username }}</span>
+                <span class="ml-2 text-xs text-gray-500">{{ message.send_at }}</span>
+              </div>
+              <div>
+                {{ message.message }}
+              </div>
+            </div>
+          </div>
+        </div>
         <div id="slack-chat-message" class="h-40 bg-pink-800">メッセージ</div>
       </div>
     </div>
@@ -302,6 +360,10 @@
     text-align: center;
     vertical-align: middle;
     transform: translate(-50%, -50%);
+  }
+
+  .sticky-today {
+    transform: translateX(-50%);
   }
 
 </style>
@@ -349,6 +411,15 @@
     },
     data() {
       return {
+        messages: [
+          ...[...Array(20)].map((_, i) => ({
+            id: i + 1,
+            username: 'yukihirop',
+            image: 'https://pbs.twimg.com/profile_images/874463635950551040/IhlhyWsq_400x400.jpg',
+            message: 'study-web-designに参加しました',
+            send_at: '20:50'
+          }))
+        ],
         showProfileMenu: false,
         starChannels: [
           {
@@ -358,12 +429,12 @@
           },
           {
             id: 2,
-            name: 'babel不具合まとめ',
+            name: 'babel',
             private: false,
           },
           {
             id: 3,
-            name: 'bukken',
+            name: 'study-web-design',
             private: true,
           },
           {
