@@ -98,8 +98,9 @@
                   d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                   clip-rule="evenodd" />
               </svg>
+              <!-- プロフィールメニュー -->
               <div id="profile-menu-dropdown"
-                class="w-60 flex flex-col items-center bg-gray-100 absolute rounded-lg -left-16 top-10">
+                class="w-60 flex flex-col items-center bg-gray-100 absolute rounded-lg -left-16 top-10 shadow">
                 <!-- プロフィール画像 -->
                 <div class="w-full flex items-center justify-start text-black border-b p-2 pl-3">
                   <div class="w-10 h-10">
@@ -288,23 +289,48 @@
             </div>
             <div class="px-2">6月1日、あなたがこのプライベートチャンネルを作成しました。どんどん活用していきましょう！</div>
             <div id="slack-chat-content-action" class="flex space-x-4 items-center px-2 py-4">
-              <div class="flex items-center">
+              <div class="flex items-center" @click="showAddDescModal = true">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 cursor-pointer text-blue-500" fill="none"
                   viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
-                <a href="" class="ml-2 cursor-pointer text-blue-500">
+                <span href="#" class="ml-2 cursor-pointer text-blue-500">
                   説明を追加する
-                </a>
+                </span>
               </div>
+              <!-- 説明を追加するをクリックした時に表示されるモーダル -->
+              <teleport to="#adddesc">
+                <div class="modal-base mt-50" v-if="showAddDescModal">
+                  <div class="overlay" @click="showAddDescModal=false">
+                  </div>
+                  <div class="flex flex-col w-1/3 h-80 justify-between relative bg-white p-4 rounded-lg top-1/3 mx-auto">
+                    <!-- タイトル -->
+                    <div class="w-full flex flex-row justify-between items-center">
+                      <h1 class="text-xl font-bold">説明を編集</h1>
+                      <button class="w-8 h-8 leading-8 rounded-lg text-center hover:bg-gray-300 focus:outline-none"><i class="fa fa-times"
+                          aria-hidden="true"></i></button>
+                    </div>
+                    <!-- 説明を追加 -->
+                    <div>
+                      <textarea class="w-full h-32 border resize-none p-2 rounded-lg border-gray-500"
+                        placeholder="説明を追加" cols="30" rows="10"></textarea>
+                      <small class="text-gray-500">このチャンネルの目的を入力できます。</small>
+                    </div>
+                    <div class="mt-4 flex justify-end space-x-2">
+                      <button class="p-1 px-2 border rounded-md font-semibold">キャンセル</button>
+                      <button class="w-20 p-1 bg-green-700 text-white rounded-md font-semibold">保存</button>
+                    </div>
+                  </div>
+                </div>
+              </teleport>
               <div class="flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 cursor-pointer text-blue-500" fill="none"
                   viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                 </svg>
-                <a href="" class="ml-2 cursor-pointer text-blue-500">メンバーを追加する</a>
+                <span class="ml-2 cursor-pointer text-blue-500">メンバーを追加する</span>
               </div>
             </div>
           </div>
@@ -361,9 +387,25 @@
       </div>
     </div>
   </div>
+  <!-- 説明を追加するをクリックした時に表示されるモーダル -->
+  <div id="adddesc"></div>
 </body>
 
 <style>
+  .modal-base {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background-color: gray;
+    opacity: .5;
+  }
+
   .slack-content {
     height: calc(100vh - 2.5rem);
   }
@@ -435,6 +477,7 @@
     },
     data() {
       return {
+        showAddDescModal: false,
         richTextMenus: [
           {
             icon: 'fas fa-font',
