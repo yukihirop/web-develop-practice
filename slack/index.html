@@ -268,7 +268,7 @@
           </ul>
         </div>
       </div>
-      <div id="slack-chat" class="w-full h-full flex flex-col justify-between">
+      <div id="slack-chat" class="w-full h-full flex flex-col justify-between relative">
         <div id="slack-chat-header" class="h-12 flex items-center py-2 pl-4 border-b">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd"
@@ -277,8 +277,9 @@
           </svg>
           <span class="font-bold text-black">study-web-design</span>
         </div>
-        <div id="slack-chat-content" class="h-full overflow-y-auto relative">
-          <div id="slack-chat-content-header" class="h-44 items-center py-2 pl-4 border-b">
+        <div id="slack-chat-content" class="h-full overflow-y-auto">
+          <!-- ヘッダー -->
+          <div id="slack-chat-content-header" class="h-44 items-center py-2 pl-4">
             <div id="slack-chat-content-header-title" class="flex items-center pt-10">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"
@@ -304,12 +305,13 @@
                 <div class="modal-base mt-50" v-if="showAddDescModal">
                   <div class="overlay" @click="showAddDescModal=false">
                   </div>
-                  <div class="flex flex-col w-1/3 h-80 justify-between relative bg-white p-4 rounded-lg top-1/3 mx-auto">
+                  <div
+                    class="flex flex-col w-1/3 h-80 justify-between relative bg-white p-4 rounded-lg top-1/3 mx-auto">
                     <!-- タイトル -->
                     <div class="w-full flex flex-row justify-between items-center">
                       <h1 class="text-xl font-bold">説明を編集</h1>
-                      <button class="w-8 h-8 leading-8 rounded-lg text-center hover:bg-gray-300 focus:outline-none"><i class="fa fa-times"
-                          aria-hidden="true"></i></button>
+                      <button class="w-8 h-8 leading-8 rounded-lg text-center hover:bg-gray-300 focus:outline-none"><i
+                          class="fa fa-times" aria-hidden="true"></i></button>
                     </div>
                     <!-- 説明を追加 -->
                     <div>
@@ -334,32 +336,35 @@
               </div>
             </div>
           </div>
-          <!-- 今日 -->
-          <div
-            class="w-16 flex flex-row items-center justify-center sticky top-0 left-1/2 z-10 rounded-lg border bg-white p-1 mt-1 sticky-today">
-            <button class="text-sm font-semibold border-gray-300 focus:outline-none">今日</button>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-black cursor-pointer" viewBox="0 0 20 20"
-              fill="currentColor">
-              <path fill-rule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clip-rule="evenodd" />
-            </svg>
-          </div>
           <!-- メッセージ -->
           <div v-for="(message, index) in messages" :key="index"
-            class="w-full flex flex-row items-center p-4 border-b hover:bg-gray-200">
-            <div class="flex flex-col items-center">
-              <img :src="message.image" class="w-10 h-10">
+            class="w-full flex flex-col items-center justify-between">
+            <!-- 今日 -->
+            <div class="w-full flex items-center relative">
+              <hr class="w-full" />
             </div>
-            <div class="flex flex-col h-20 ml-4 pt-4">
-              <div>
-                <span class="font-semibold hover:underline">{{ message.username }}</span>
-                <span class="ml-2 text-xs text-gray-500">{{ message.send_at }}</span>
+            <div
+              class="w-16 p-1 flex flex-row items-center justify-center sticky sticky-today top-5 left-1/2 z-10 rounded-lg border bg-white">
+              <button class="text-sm font-semibold border-gray-300 focus:outline-none">今日 <i
+                  class="fa-xs fas fa-chevron-down"></i></button>
+            </div>
+            <!-- メッセージ -->
+            <div class="w-full flex flex-row items-center px-4 hover:bg-gray-200">
+              <div class="flex flex-col items-center">
+                <img :src="message.image" class="w-10 h-10">
               </div>
-              <div>
-                {{ message.message }}
+              <div class="flex flex-col h-20 ml-4 pt-4">
+                <div>
+                  <span class="font-semibold hover:underline">{{ message.username }}</span>
+                  <span class="ml-2 text-xs text-gray-500">{{ message.send_at }}</span>
+                </div>
+                <div>
+                  {{ message.message }}
+                </div>
               </div>
             </div>
+            <!-- ダミー -->
+            <div class="w-full h-6"></div>
           </div>
         </div>
         <div id="slack-chat-rich-text" class="min-h-40 bg-white p-4">
@@ -429,7 +434,7 @@
   }
 
   .sticky-today {
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
   }
 
 </style>
