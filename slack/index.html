@@ -269,24 +269,105 @@
         </div>
       </div>
       <div id="slack-chat" class="w-full h-full flex flex-col justify-between relative">
-        <div id="slack-chat-header" class="h-12 flex items-center py-2 pl-4 border-b">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd"
-              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-              clip-rule="evenodd" />
-          </svg>
-          <span class="font-bold text-black">study-web-design</span>
+        <div id="slack-chat-header" class="h-12 flex items-center justify-between py-2 pl-4 border-b">
+          <div class="flex items-center">
+            <i class="fas fa-lock"></i>
+            <span class="ml-2 font-bold text-black">study-web-design</span>
+          </div>
+          <button
+            class="rounded-md border flex items-center align-middle p-1 px-2 mr-2 hover:bg-gray-100 focus:outline-none"
+            @click="showChannelSetting=true">
+            <img class="w-6 h-6" src="https://avatars.githubusercontent.com/u/11146767?v=4" alt="">
+            <span class="px-1 text-xs">1</span>
+          </button>
+          <teleport to="#channel-setting">
+            <div class="modal-base-3" v-if="showChannelSetting">
+              <div class="overlay-3" @click="showChannelSetting=false"></div>
+              <div class="relative flex flex-col space-y-4 z-100 rounded-lg bg-white">
+                <div id="modal-header" class="flex items-center justify-between px-4">
+                  <div class="flex flex-col items-center mr-80">
+                    <div class="flex items-center pt-4">
+                      <i class="fa fa-lock"></i>
+                      <h2 class="ml-2 text-xl">study-web-dezigin</h2>
+                    </div>
+                  </div>
+                  <button class="w-8 h-8 leading-8 rounded-md hover:bg-gray-200" @click="showChannelSetting=false">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <div class="flex justify-start space-x-2 px-4">
+                  <button class="border text-xs rounded-md p-1 px-2 focus:outline-none">
+                    <i class="fa fa-bell"></i>
+                    通知を有効にする
+                  </button>
+                  <button class="bg-gray-300 text-xs text-black rounded-lg p-1 px-2 focus:outline-none">
+                    <i class="fa fa-phone"></i>
+                    通話を開始する
+                  </button>
+                </div>
+                <div id="modal-tabs" class="">
+                  <div id="modal-tabs-menu">
+                    <div class="tabbed">
+                      <input type="radio" name="channel-tabs" id="channel">
+                      <input type="radio" name="channel-tabs" id="member-1" checked>
+                      <input type="radio" name="channel-tabs" id="integration">
+                      <input type="radio" name="channel-tabs" id="config">
+
+                      <div class="border-b mb-4">
+                        <ul class="tabs flex justify-start space-x-4 px-4 text-sm text-semibold text-gray-800">
+                          <li class="tab"><label for="channel">チャンネル情報</label></li>
+                          <li class="tab"><label for="member-1">メンバー1</label></li>
+                          <li class="tab"><label for="integration">インテグレーション</label></li>
+                          <li class="tab"><label for="config">設定</label></li>
+                        </ul>
+                      </div>
+
+                      <div class="tab-content">
+                        aaaaaaaaaaaaaaaaaaaaa
+                      </div>
+                      <div class="tab-content flex justify-start space-y-4 h-96">
+                        <div class="px-4 pb-2">
+                          <div
+                            class="flex justify-start items-center w-full rounded-md border focus:ring focus:border-blue-300">
+                            <i class="ml-2 fa fa-search text-gray-500"></i>
+                            <input type="text" placeholder="メンバーを検索"
+                              class="ml-1 px-2 py-1 w-11/12 focus:outline-none"></input>
+                          </div>
+                        </div>
+                        <div class="flex flex-col">
+                          <div class="flex justify-start items-center p-4 hover:bg-gray-100">
+                            <button class="w-8 h-8 leading-8 rounded-md bg-blue-100">
+                              <i class="fa fa-user-plus"></i>
+                            </button>
+                            <strong class="ml-2">メンバーを追加する</strong>
+                          </div>
+                          <div class="flex justify-start items-center p-4 hover:bg-gray-100">
+                            <button class="w-8 h-8 leading-8 rounded-md bg-blue-100">
+                              <img src="https://avatars.githubusercontent.com/u/11146767?v=4" alt="">
+                            </button>
+                            <strong class="ml-2">yukihirop (自分)</strong>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-content">
+                        ccccccccccccccccccccc
+                      </div>
+                      <div class="tab-content">
+                        ddddddddddddddddddddd
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </teleport>
         </div>
         <div id="slack-chat-content" class="h-full overflow-y-auto">
           <!-- ヘッダー -->
           <div id="slack-chat-content-header" class="h-44 items-center py-2 pl-4">
             <div id="slack-chat-content-header-title" class="flex items-center pt-10">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd"
-                  d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                  clip-rule="evenodd" />
-              </svg>
-              <div class="font-bold text-black text-lg py-2">study-web-design</div>
+              <i class="fas fa-lock"></i>
+              <div class="ml-2 font-bold text-black text-lg py-2">study-web-design</div>
             </div>
             <div class="px-2">6月1日、あなたがこのプライベートチャンネルを作成しました。どんどん活用していきましょう！</div>
             <div id="slack-chat-content-action" class="flex space-x-4 items-center px-2 py-4">
@@ -442,6 +523,7 @@
   <div id="adddesc"></div>
   <!-- メンバーを追加するをクリックした時に表示されるモーダル -->
   <div id="addmember"></div>
+  <div id="channel-setting"></div>
 </body>
 
 <style>
@@ -505,6 +587,55 @@
     opacity: .5;
   }
 
+  .modal-base-3 {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+  }
+
+  .overlay-3 {
+    position: fixed;
+    inset: 0;
+    background-color: gray;
+    opacity: .5;
+  }
+
+  .tabbed {
+    overflow-x: hidden;
+  }
+
+  .tabbed [type="radio"] {
+    display: none;
+  }
+
+  .tab>label {
+    display: block;
+    cursor: pointer;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tabbed [type="radio"]:nth-of-type(1):checked~.tabs .tab:nth-of-type(1) label,
+  .tabbed [type="radio"]:nth-of-type(2):checked~.tabs .tab:nth-of-type(2) label,
+  .tabbed [type="radio"]:nth-of-type(3):checked~.tabs .tab:nth-of-type(3) label,
+  .tabbed [type="radio"]:nth-of-type(4):checked~.tabs .tab:nth-of-type(4) label {
+    border-bottom: 1px solid;
+    border-bottom-color: orangered;
+  }
+
+  .tabbed [type="radio"]:nth-of-type(1):checked~.tab-content:nth-of-type(2),
+  .tabbed [type="radio"]:nth-of-type(2):checked~.tab-content:nth-of-type(3),
+  .tabbed [type="radio"]:nth-of-type(3):checked~.tab-content:nth-of-type(4),
+  .tabbed [type="radio"]:nth-of-type(4):checked~.tab-content:nth-of-type(5) {
+    display: block;
+  }
+
 </style>
 
 </html>
@@ -550,6 +681,7 @@
     },
     data() {
       return {
+        showChannelSetting: false,
         showAddMemberModal: false,
         showAddDescModal: false,
         richTextMenus: [
