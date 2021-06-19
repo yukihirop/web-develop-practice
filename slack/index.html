@@ -310,8 +310,8 @@
                     <!-- タイトル -->
                     <div class="w-full flex flex-row justify-between items-center">
                       <h1 class="text-xl font-bold">説明を編集</h1>
-                      <button class="w-8 h-8 leading-8 rounded-lg text-center hover:bg-gray-300 focus:outline-none"><i
-                          class="fa fa-times" aria-hidden="true"></i></button>
+                      <button class="w-8 h-8 leading-8 rounded-lg text-center hover:bg-gray-300 focus:outline-none"
+                        @click="showAddDescModal=false"><i class="fa fa-times" aria-hidden="true"></i></button>
                     </div>
                     <!-- 説明を追加 -->
                     <div>
@@ -320,13 +320,15 @@
                       <small class="text-gray-500">このチャンネルの目的を入力できます。</small>
                     </div>
                     <div class="mt-4 flex justify-end space-x-2">
-                      <button class="p-1 px-2 border rounded-md font-semibold">キャンセル</button>
-                      <button class="w-20 p-1 bg-green-700 text-white rounded-md font-semibold">保存</button>
+                      <button class="p-1 px-2 border rounded-md font-semibold hover:bg-gray-100 focus:outline-none"
+                        @click="showAddDescModal=false">キャンセル</button>
+                      <button
+                        class="w-20 p-1 bg-green-700 text-white rounded-md font-semibold hover:bg-green-600 focus:outline-none">保存</button>
                     </div>
                   </div>
                 </div>
               </teleport>
-              <div class="flex items-center">
+              <div class="flex items-center" @click="showAddMemberModal = true">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 cursor-pointer text-blue-500" fill="none"
                   viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -334,6 +336,50 @@
                 </svg>
                 <span class="ml-2 cursor-pointer text-blue-500">メンバーを追加する</span>
               </div>
+              <!-- メンバーを追加するをクリックした時に表示されるモーダル -->
+              <teleport to="#addmember">
+                <div class="modal-base-2" v-if="showAddMemberModal">
+                  <div class="overlay-2" @click="showAddMemberModal=false"></div>
+                  <div class="w-1/3 z-50 bg-white rounded-lg flex flex-col items-center p-4 space-y-4">
+                    <div class="flex justify-between space-x-2">
+                      <h1 class="text-xl font-semibold w-11/12">追加されたユーザーは誰でも、チャンネルのコンテンツをすべて閲覧できるようになります。</h1>
+                      <button class="w-8 h-8 leading-8 rounded-md text-center hover:bg-gray-300"
+                        @click="showAddMemberModal=false"><i class="fa fa-times"></i></button>
+                    </div>
+                    <p>新しいメンバーは、チャンネル内で共有されたファイルを含め、study-web-designの履歴をすべて閲覧できるようになります。代わりに、新しいチャンネルを作成することも可能です。
+                    </p>
+                    <fieldset class="w-full flex flex-col space-y-4">
+                      <div class="align-middle">
+                        <label class="flex" for="add-channel">
+                          <input type="radio" name="select-channel" id="add-channel" />
+                          <span class="-mt-0.5 ml-2 text-sm text-left">
+                            <strong>study-web-designに追加</strong>
+                            <br />
+                            新しいメンバーを既存のチャンネルに追加します
+                          </span>
+                        </label>
+                      </div>
+                      <div class="align-middle">
+                        <label class="flex" for="new-channel">
+                          <input type="radio" name="select-channel" id="new-channel" />
+                          <span class="-mt-1 ml-2 text-sm">
+                            <strong class="text-base">新しいチャンネルを作成する</strong>
+                            <br>
+                            Slackが既存のチャンネルをアーカイブし、そのチャンネルのメンバー全員を自動的に新しいチャンネルへと招待します。
+                          </span>
+                        </label>
+                      </div>
+                    </fieldset>
+                    <div class="w-full flex justify-end space-x-2">
+                      <button
+                        class="font-semibold text-sm w-30 border hover:bg-gray-100 p-2 rounded-md focus:outline-none"
+                        @click="showAddMemberModal=false">キャンセル</button>
+                      <button
+                        class="font-semibold text-white bg-green-700 hover:bg-green-600 p-2 rounded-md focus:outline-none">続行する</button>
+                    </div>
+                  </div>
+                </div>
+              </teleport>
             </div>
           </div>
           <!-- メッセージ -->
@@ -344,7 +390,7 @@
               <hr class="w-full" />
             </div>
             <div
-              class="w-16 p-1 flex flex-row items-center justify-center sticky sticky-today top-5 left-1/2 z-10 rounded-lg border bg-white">
+              class="w-16 p-1 flex flex-row items-center justify-center sticky sticky-today top-5 left-1/2 rounded-lg border bg-white">
               <button class="text-sm font-semibold border-gray-300 focus:outline-none">今日 <i
                   class="fa-xs fas fa-chevron-down"></i></button>
             </div>
@@ -394,14 +440,19 @@
   </div>
   <!-- 説明を追加するをクリックした時に表示されるモーダル -->
   <div id="adddesc"></div>
+  <!-- メンバーを追加するをクリックした時に表示されるモーダル -->
+  <div id="addmember"></div>
 </body>
 
 <style>
   .modal-base {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: center;
+    margin-top: 100px;
   }
 
   .overlay {
@@ -435,6 +486,23 @@
 
   .sticky-today {
     transform: translate(-50%, -50%);
+  }
+
+  .modal-base-2 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+  }
+
+  .overlay-2 {
+    position: fixed;
+    inset: 0;
+    background-color: gray;
+    opacity: .5;
   }
 
 </style>
@@ -482,6 +550,7 @@
     },
     data() {
       return {
+        showAddMemberModal: false,
         showAddDescModal: false,
         richTextMenus: [
           {
