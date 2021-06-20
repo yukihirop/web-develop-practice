@@ -99,7 +99,7 @@
                   clip-rule="evenodd" />
               </svg>
               <!-- プロフィールメニュー -->
-              <div id="profile-menu-dropdown"
+              <div id="profile-menu-dropdown" v-show="showProfileMenu"
                 class="w-60 flex flex-col items-center bg-gray-100 absolute rounded-lg -left-16 top-10 shadow">
                 <!-- プロフィール画像 -->
                 <div class="w-full flex items-center justify-start text-black border-b p-2 pl-3">
@@ -313,7 +313,7 @@
                       <input type="radio" name="channel-tabs" id="integration">
                       <input type="radio" name="channel-tabs" id="config">
 
-                      <div class="border-b mb-4">
+                      <div class="divtabs border-b mb-4">
                         <ul class="tabs flex justify-start space-x-4 px-4 text-sm text-semibold text-gray-800">
                           <li class="tab"><label for="channel">チャンネル情報</label></li>
                           <li class="tab"><label for="member-1">メンバー1</label></li>
@@ -323,7 +323,84 @@
                       </div>
 
                       <div class="tab-content">
-                        aaaaaaaaaaaaaaaaaaaaa
+                        <div class="mx-4 rounded-lg border">
+                          <div class="border-b p-4 hover:bg-gray-200">
+                            <h3 class="text-md font-semibold">
+                              トピック
+                            </h3>
+                            <p class="text-sm text-gray-500">トピックを追加する</p>
+                          </div>
+                          <div class="border-b p-4 hover:bg-gray-200">
+                            <h3 class="text-md font-semibold">
+                              説明
+                            </h3>
+                            <p class="text-sm text-gray-500">説明を追加する</p>
+                          </div>
+                          <div class="border-b p-4 hover:bg-gray-200">
+                            <h3 class="text-md font-semibold">
+                              作成者:
+                            </h3>
+                            <p class="text-sm text-gray-500">yukihiropさんが2021年６月1日に作成</p>
+                          </div>
+                          <div class="p-4 hover:bg-gray-200"><strong class=" text-md text-red-500">チャンネルから退出する</strong>
+                          </div>
+                        </div>
+                        <div class="m-4 pb-2 rounded-lg border">
+                          <h3 class="p-4 text-md font-semibold">ファイル</h3>
+                          <div class="hover:bg-gray-200">
+                            <div class="p-4 flex justify-start">
+                              <img class="w-10 h-10 p-1" src="https://avatars.githubusercontent.com/u/11146767?v=4"
+                                alt="">
+                              <div class="flex flex-col">
+                                <div class="text-semibold">image.png</div>
+                                <div class="flex justify-between">
+                                  <div class="text-xs text-semibold">yukihirop</div>
+                                  <div class="ml-2 text-xs text-gray-500">今日 11:22</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="hover:bg-gray-200">
+                            <div class="p-4 flex justify-start">
+                              <img class="w-10 h-10 p-1" src="https://avatars.githubusercontent.com/u/11146767?v=4"
+                                alt="">
+                              <div class="flex flex-col">
+                                <div class="text-semibold">image.png</div>
+                                <div class="flex justify-between">
+                                  <div class="text-xs text-semibold">yukihirop</div>
+                                  <div class="ml-2 text-xs text-gray-500">今日 11:22</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="hover:bg-gray-200">
+                            <div class="p-4 flex justify-start">
+                              <img class="w-10 h-10 p-1" src="https://avatars.githubusercontent.com/u/11146767?v=4"
+                                alt="">
+                              <div class="flex flex-col">
+                                <div class="text-semibold">image.png</div>
+                                <div class="flex justify-between">
+                                  <div class="text-xs text-semibold">yukihirop</div>
+                                  <div class="ml-2 text-xs text-gray-500">今日 11:22</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="hover:bg-gray-200">
+                            <div class="p-4 flex justify-start">
+                              <img class="w-10 h-10 p-1" src="https://avatars.githubusercontent.com/u/11146767?v=4"
+                                alt="">
+                              <div class="flex flex-col">
+                                <div class="text-semibold">image.png</div>
+                                <div class="flex justify-between">
+                                  <div class="text-xs text-semibold">yukihirop</div>
+                                  <div class="ml-2 text-xs text-gray-500">今日 11:22</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <a href="#" class="p-4 text-blue-500 text-sm font-bold">もっと表示する</a>
+                        </div>
                       </div>
                       <div class="tab-content flex justify-start space-y-4 h-96">
                         <div class="px-4 pb-2">
@@ -346,6 +423,10 @@
                               <img src="https://avatars.githubusercontent.com/u/11146767?v=4" alt="">
                             </button>
                             <strong class="ml-2">yukihirop (自分)</strong>
+                            <div class="rounded-full w-2 h-2 bg-green-700 text-center ml-2"></div>
+                            <p class="ml-2">
+                              yukihirop
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -621,19 +702,27 @@
     display: none;
   }
 
-  .tabbed [type="radio"]:nth-of-type(1):checked~.tabs .tab:nth-of-type(1) label,
-  .tabbed [type="radio"]:nth-of-type(2):checked~.tabs .tab:nth-of-type(2) label,
-  .tabbed [type="radio"]:nth-of-type(3):checked~.tabs .tab:nth-of-type(3) label,
-  .tabbed [type="radio"]:nth-of-type(4):checked~.tabs .tab:nth-of-type(4) label {
+  /* .tabbed [type="radio"]:nth-of-type(1):checked~label:nth-of-type(1),
+  .tabbed [type="radio"]:nth-of-type(2):checked~label:nth-of-type(2),
+  .tabbed [type="radio"]:nth-of-type(3):checked~label:nth-of-type(3),
+  .tabbed [type="radio"]:nth-of-type(4):checked~label:nth-of-type(4) {
     border-bottom: 1px solid;
     border-bottom-color: orangered;
-  }
+  } */
 
   .tabbed [type="radio"]:nth-of-type(1):checked~.tab-content:nth-of-type(2),
   .tabbed [type="radio"]:nth-of-type(2):checked~.tab-content:nth-of-type(3),
   .tabbed [type="radio"]:nth-of-type(3):checked~.tab-content:nth-of-type(4),
   .tabbed [type="radio"]:nth-of-type(4):checked~.tab-content:nth-of-type(5) {
     display: block;
+  }
+
+  .tabbed [type="radio"]:nth-of-type(1):checked~ .divtabs .tabs .tab:nth-of-type(1) label,
+  .tabbed [type="radio"]:nth-of-type(2):checked~ .divtabs .tabs .tab:nth-of-type(2) label,
+  .tabbed [type="radio"]:nth-of-type(3):checked~ .divtabs .tabs .tab:nth-of-type(3) label,
+  .tabbed [type="radio"]:nth-of-type(4):checked~ .divtabs .tabs .tab:nth-of-type(4) label {
+    border-bottom: 2px solid;
+    border-bottom-color: green;
   }
 
 </style>
