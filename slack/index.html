@@ -46,9 +46,54 @@
       <div id="slack-header-right" class="w-full max-w-full flex justify-between items-center">
         <div id="slack-header-right-search" class="w-full max-w-full flex justify-start">
           <button
-            class="mx-3 w-1/2 max-w-full text-gray-300 hover:text-white bg-pink-900 border rounded-lg border-gray-300 p-1 text-center text-gray-100 my-1 focus:outline-none">
+            class="relative mx-3 w-1/2 max-w-full text-gray-300 hover:text-white bg-pink-900 border rounded-lg border-gray-300 p-1 text-center text-gray-100 my-1 focus:outline-none"
+            @click="showSearchForm=true">
             slack.appを検索する
           </button>
+          <div v-if="showSearchForm"
+            class="w-4/5 absolute top-0 left-1/2 mx-auto rounded-lg search-form bg-white border">
+            <div class="px-4 py-1 mb-4 flex justify-between items-center space-x-2 border-b">
+              <i class="fas fa-search px-2 py-1 text-gray"></i>
+              <input type="text" class="p-2 flex-grow focus:outline-none" placeholder="メッセージやファイルを隅から隅まで検索。" />
+              <button @click="showSearchForm=false"><i class="fa fa-times px-4 py-1 text-gray-500"></i></button>
+            </div>
+            <div class="flex flex-col space-y-4">
+              <div class="px-4 space-y-4">
+                <p class="py-2 text-xs text-gray-300">確認中です...</p>
+                <div class="flex flex-start space-x-2">
+                  <button class="px-4 py-1 font-semibold bg-blue-100 rounded-md hover:bg-blue-500 hover:text-white">
+                    <i class="fa.far fa-comment-alt" aria-hidden="true"></i>
+                    メッセージ
+                  </button>
+                  <button class="px-4 py-1 font-semibold bg-blue-100 rounded-md hover:bg-blue-500 hover:text-white">
+                    <i class="fa far fa-file-alt"></i>
+                    ファイル
+                  </button>
+                  <button class="px-4 py-1 font-semibold bg-blue-100 rounded-md hover:bg-blue-500 hover:text-white">
+                    <i class="fa fa-list-alt"></i>
+                    チャンネル
+                  </button>
+                  <button class="px-4 py-1 font-semibold bg-blue-100 rounded-md hover:bg-blue-500 hover:text-white">
+                    <i class="fa fa-users"></i>
+                    メンバーディレクトリ
+                  </button>
+                </div>
+              </div>
+              <div>
+                <p class="p-4 text-xs text-gray-300">最近の検索</p>
+                <div class="w-full flex flex-col pb-4">
+                  <div class="p-4 w-full flex flex-start items-center space-x-2 hover:bg-blue-500 hover:text-white">
+                    <i class="fa far fa-clock mr-2" aria-hidden="true"></i>
+                    MIKAN <span class="message-file hover:text-white">- メッセージやファイルなどを検索する</span>
+                  </div>
+                  <div class="p-4 w-full flex flex-start items-center space-x-2 hover:bg-blue-500 hover:text-white">
+                    <i class="fa far fa-clock mr-2"></i>
+                    ミカン <span class="message-file">- メッセージやファイルなどを検索する</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <button class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1 my-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
@@ -57,13 +102,52 @@
             </svg>
           </button>
         </div>
+        <!-- プロフィール詳細モーダル -->
         <div id="slack-header-right-setting"
-          class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1 mx-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 stroke-1" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+          class="relative text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1 mx-2"
+          @click="showProfileDetailMenu=!showProfileDetailMenu">
+          <img class="relative h-8 w-8 rounded-md" src="https://avatars.githubusercontent.com/u/11146767?v=4" alt="">
+          <i class="profile-status absolute fa-xs fa fa-circle border-pink-900" aria-hidden="true"></i>
+          <div v-show="showProfileDetailMenu"
+            class="profile-detail w-80 top-10 right-1 absolute flex flex-col bg-gray-100 rounded-lg mx-auto shadow-sm text-sm">
+            <div class="flex flex-col text-black border-b space-y-2">
+              <div class="p-4 flex flex-start space-x-2">
+                <img src="https://avatars.githubusercontent.com/u/11146767?v=4" alt="" class="h-10 w-10 rounded-md">
+                <div class="flex flex-col">
+                  <strong>yukihirop</strong>
+                  <p class="text-gray-500 text-xs">
+                    <i class="fa-xs fa fa-circle"></i>
+                    アクティブ
+                  </p>
+                </div>
+              </div>
+              <div class="px-4">
+                <button class="w-full pl-4 py-2 border rounded-md text-left bg-white">
+                  <i class="fa far fa-smile-wink"></i>
+                  ステータスを更新する
+                </button>
+              </div>
+              <div class="px-4 py-2 hover:bg-blue-500 hover:text-white">
+                ログイン状態を<strong>離席中</strong>に変更
+              </div>
+              <div class="px-4 py-2 hover:bg-blue-500 hover:text-white">
+                通知を一時的に停止する
+              </div>
+            </div>
+            <div class="border-b">
+              <div class="px-4 py-2 text-black hover:bg-blue-500 hover:text-white">
+                <i class="fa fa-camera" aria-hidden="true"></i>
+                プロフィールを編集
+              </div>
+              <div class="px-4 py-2 text-black hover:bg-blue-500 hover:text-white">プロフィールを表示する</div>
+              <div class="px-4 py-2 text-black hover:bg-blue-500 hover:text-white">環境設定</div>
+            </div>
+            <div class="p-4 flex flex-col text-black hover:bg-blue-500 hover:text-white mb-4">
+              <div>
+                以下からサインアウト: <small>yukihirop</small>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -790,6 +874,28 @@
     border-bottom-color: green;
   }
 
+  .search-form {
+    z-index: 1000;
+    transform: translateX(-50%);
+  }
+
+  .message-file {
+    display: none;
+  }
+
+  .message-file:hover {
+    display: inline;
+  }
+
+  .profile-status {
+    top: 28px;
+    right: 8px;
+  }
+
+  .profile-detail {
+    z-index: 99999;
+  }
+
 </style>
 
 </html>
@@ -835,6 +941,8 @@
     },
     data() {
       return {
+        showProfileDetailMenu: false,
+        showSearchForm: false,
         showChannelSetting: false,
         showAddMemberModal: false,
         showAddDescModal: false,
