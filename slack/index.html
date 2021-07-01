@@ -94,7 +94,7 @@
               </div>
             </div>
           </div>
-          <button class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1 my-1">
+          <button @click="showHelp=true" class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1 my-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -755,6 +755,29 @@
           </div>
         </div>
       </div>
+      <div id="slack-separator"></div>
+      <div v-if="showHelp" class="w-2/5 h-full flex flex-col justify-between border">
+        <div id="slack-help-header" class="h-12 flex items-center justify-between py-2 pl-4 border-b">
+          <div class="flex items-center">
+            <span class="font-bold text-black">ヘルプ</span>
+          </div>
+          <div class="flex flex-start items-center justify text-gray">
+            <button class="rounded-md flex items-center align-middle p-2 mr-2 hover:bg-gray-100 focus:outline-none">
+              <i class="fa fa-keyboard" aria-hidden="true"></i>
+            </button>
+            <button class="rounded-md flex items-center align-middle p-2 mr-2 hover:bg-gray-100 focus:outline-none">
+              <i class="fa fa-gift"></i>
+            </button>
+            <button class="rounded-md flex items-center align-middle p-2 mr-2 hover:bg-gray-100 focus:outline-none"
+              @click="showHelp=false">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div id="slack-help-content" class="m-2 h-full flex flex-col justify-between">
+          コンテンツ
+        </div>
+      </div>
     </div>
   </div>
   <!-- 説明を追加するをクリックした時に表示されるモーダル -->
@@ -941,6 +964,7 @@
     },
     data() {
       return {
+        showHelp: false,
         showProfileDetailMenu: false,
         showSearchForm: false,
         showChannelSetting: false,
