@@ -1,102 +1,124 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faBell, faPlus, faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import GitHubSearch from "@comp/molecules/github-search";
+import GitHubProfileMenu from "@comp/molecules/github-profile-menu";
+import GitHubProfilePlus from "@comp/molecules/github-profile-plus";
+import { useState, useRef, useEffect } from "react";
+
 const Header: React.VFC = () => {
+  const menus = [
+    {
+      label: "Pull requests",
+      link: "https://github.com/pulls",
+    },
+    {
+      label: "Issues",
+      link: "https://github.com/issues",
+    },
+    {
+      label: "Marketplace",
+      link: "https://github.com/marketplace",
+    },
+    {
+      label: "Explore",
+      link: "https://github.com/explore",
+    },
+  ];
+
+  const profile = {
+    username: "yukihirop",
+    status: "💪 burning",
+  };
+
+  const profileImgUrl =
+    "https://avatars.githubusercontent.com/u/11146767?s=40&v=4";
+
+  const [isShowPlus, setIsShowPlus] = useState(false);
+  const [isShowMenu, setIsShowMenu] = useState(false);
+  const plusRef = useRef<HTMLDivElement>(null!);
+  const menuRef = useRef<HTMLDivElement>(null!);
+  const documentClickHandler = useRef(null!);
+
+  function closeWithClickOutSide(e: React.MouseEvent<HTMLInputElement>) {
+    if (isShowPlus) {
+      setIsShowPlus(false);
+    }
+    if (isShowMenu) {
+      setIsShowMenu(false);
+    }
+  }
+
+  useEffect(() => {
+    documentClickHandler.current = (e: React.MouseEvent<HTMLInputElement>) => {
+      if (plusRef && plusRef.current.contains(e.target as HTMLInputElement))
+        return;
+      if (menuRef && menuRef.current.contains(e.target as HTMLInputElement))
+        return;
+      setIsShowPlus(false);
+      setIsShowMenu(false);
+    };
+
+    document.addEventListener("click", documentClickHandler.current);
+  });
+
   return (
-    <div className="bg-white lg:pb-12">
-      <div className="max-w-screen-2xl px-4 md:px-8 mx-auto">
-        <header className="flex justify-between items-center py-4 md:py-8">
-          <a
-            href="/"
-            className="inline-flex items-center text-black-800 text-2xl md:text-3xl font-bold gap-2.5"
-            aria-label="logo"
-          >
-            <svg
-              width="95"
-              height="94"
-              viewBox="0 0 95 94"
-              className="w-6 h-auto text-indigo-500"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M96 0V47L48 94H0V47L48 0H96Z" />
-            </svg>
-            Flowrift
-          </a>
-
-          <nav className="hidden lg:flex gap-12">
-            <a
-              href="#"
-              className="text-gray-600 hover:text-indigo-500 active:text-indigo-700 text-lg font-semibold transition duration-100"
-            >
-              Home
+    <header className="flex bg-black h-14 justify-between">
+      <div className="max-w-full mx-6 my-auto flex flex-row space-x-4">
+        <FontAwesomeIcon icon={faGithub} className="w-8 h-8 text-white" />
+        <GitHubSearch />
+        <div className="flex flex-row space-x-3 text-white my-auto text-sm font-semibold">
+          {menus.map((menu, index) => (
+            <a key={index} href={menu.link}>
+              {menu.label}
             </a>
-            <a
-              href="#"
-              className="inline-flex items-center text-indigo-500 text-lg font-semibold gap-1"
-            >
-              Features
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-800"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-indigo-500 active:text-indigo-700 text-lg font-semibold transition duration-100"
-            >
-              Pricing
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-indigo-500 active:text-indigo-700 text-lg font-semibold transition duration-100"
-            >
-              About
-            </a>
-          </nav>
-
-          <div className="hidden lg:flex flex-col sm:flex-row sm:justify-center lg:justify-start gap-2.5 -ml-8">
-            <a
-              href="#"
-              className="inline-block focus-visible:ring ring-indigo-300 text-gray-500 hover:text-indigo-500 active:text-indigo-600 text-sm md:text-base font-semibold text-center rounded-lg outline-none transition duration-100 px-4 py-3"
-            >
-              Sign in
-            </a>
-
-            <a
-              href="#"
-              className="inline-block bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus-visible:ring ring-indigo-300 text-white text-sm md:text-base font-semibold text-center rounded-lg outline-none transition duration-100 px-8 py-3"
-            >
-              Sign up
-            </a>
-          </div>
-
-          <button
-            type="button"
-            className="inline-flex items-center lg:hidden bg-gray-200 hover:bg-gray-300 focus-visible:ring ring-indigo-300 text-gray-500 active:text-gray-700 text-sm md:text-base font-semibold rounded-lg gap-2 px-2.5 py-2"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Menu
-          </button>
-        </header>
+          ))}
+        </div>
       </div>
-    </div>
+      <div className="my-auto flex flex-row space-x-3 mx-6">
+        <div id="github-profile-notify" className="flex my-auto">
+          <FontAwesomeIcon
+            icon={faBell}
+            className="w-4 h-4 text-white my-auto"
+          />
+        </div>
+        <div ref={plusRef} id="github-profile-plus" className="my-auto">
+          <details className="flex flex-row">
+            <summary hidden={!isShowPlus} className="flex flex-row">
+              <FontAwesomeIcon
+                icon={faPlus}
+                className="w-4 h-4 text-white my-auto"
+              />
+              <FontAwesomeIcon
+                icon={faCaretDown}
+                className="w-4 h-4 text-white my-auto"
+              />
+            </summary>
+            <div className="absolute top-12 right-20">
+              <GitHubProfilePlus />
+            </div>
+          </details>
+        </div>
+        <div ref={menuRef} id="github-profile-menu" className="my-auto">
+          <details>
+            <summary hidden={!isShowMenu} className="flex flex-row">
+              <img
+                src={profileImgUrl}
+                alt="profile icon"
+                className="w-6 h-6 rounded-full my-auto"
+              />
+              <FontAwesomeIcon
+                icon={faCaretDown}
+                className="w-4 h-4 text-white my-auto"
+              />
+            </summary>
+            <div className="absolute top-12 right-8">
+              <GitHubProfileMenu profile={profile} />
+            </div>
+          </details>
+        </div>
+      </div>
+    </header>
   );
 };
 
