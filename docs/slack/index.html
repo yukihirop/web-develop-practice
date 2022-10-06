@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slackアプリ(Practice)</title>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css"
+    integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+    <header id="slack-header" class="h-10 bg-pink-800 flex items-center">
+      <div id="slack-header-left" class="w-96 flex justify-between">
+        <div id="slack-header-left-btn" class="w-20 flex justify-start items-center">
+          <div class="rounded-full bg-red-500 h-3 w-3 ml-2 mr-1 px-0"></div>
+          <div class="rounded-full bg-yellow-500 h-3 w-3 mx-1 px-0"></div>
+          <div class="rounded-full bg-green-500 h-3 w-3 ml-1 px-0"></div>
+        </div>
+        <div id="slack-header-left-action" class="w-40 flex justify-end space-x-4 items-center text-gray-100 ">
+          <button class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+            </svg>
+          </button>
+          <button class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </button>
+          <button class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div id="slack-header-right" class="w-full max-w-full flex justify-between items-center">
+        <div id="slack-header-right-search" class="w-full max-w-full flex justify-start">
+          <button
+            class="relative mx-3 w-1/2 max-w-full text-gray-300 hover:text-white bg-pink-900 border rounded-lg border-gray-300 p-1 text-center text-gray-100 my-1 focus:outline-none"
+            @click="showSearchForm=true">
+            slack.appを検索する
+          </button>
+          <div v-if="showSearchForm"
+            class="w-4/5 absolute top-0 left-1/2 mx-auto rounded-lg search-form bg-white border">
+            <div class="px-4 py-1 mb-4 flex justify-between items-center space-x-2 border-b">
+              <i class="fas fa-search px-2 py-1 text-gray"></i>
+              <input type="text" class="p-2 flex-grow focus:outline-none" placeholder="メッセージやファイルを隅から隅まで検索。" />
+              <button @click="showSearchForm=false"><i class="fa fa-times px-4 py-1 text-gray-500"></i></button>
+            </div>
+            <div class="flex flex-col space-y-4">
+              <div class="px-4 space-y-4">
+                <p class="py-2 text-xs text-gray-300">確認中です...</p>
+                <div class="flex flex-start space-x-2">
+                  <button class="px-4 py-1 font-semibold bg-blue-100 rounded-md hover:bg-blue-500 hover:text-white">
+                    <i class="fa.far fa-comment-alt" aria-hidden="true"></i>
+                    メッセージ
+                  </button>
+                  <button class="px-4 py-1 font-semibold bg-blue-100 rounded-md hover:bg-blue-500 hover:text-white">
+                    <i class="fa far fa-file-alt"></i>
+                    ファイル
+                  </button>
+                  <button class="px-4 py-1 font-semibold bg-blue-100 rounded-md hover:bg-blue-500 hover:text-white">
+                    <i class="fa fa-list-alt"></i>
+                    チャンネル
+                  </button>
+                  <button class="px-4 py-1 font-semibold bg-blue-100 rounded-md hover:bg-blue-500 hover:text-white">
+                    <i class="fa fa-users"></i>
+                    メンバーディレクトリ
+                  </button>
+                </div>
+              </div>
+              <div>
+                <p class="p-4 text-xs text-gray-300">最近の検索</p>
+                <div class="w-full flex flex-col pb-4">
+                  <div class="p-4 w-full flex flex-start items-center space-x-2 hover:bg-blue-500 hover:text-white">
+                    <i class="fa far fa-clock mr-2" aria-hidden="true"></i>
+                    MIKAN <span class="message-file hover:text-white">- メッセージやファイルなどを検索する</span>
+                  </div>
+                  <div class="p-4 w-full flex flex-start items-center space-x-2 hover:bg-blue-500 hover:text-white">
+                    <i class="fa far fa-clock mr-2"></i>
+                    ミカン <span class="message-file">- メッセージやファイルなどを検索する</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button @click="showHelp=true" class="text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1 my-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+        </div>
+        <!-- プロフィール詳細モーダル -->
+        <div id="slack-header-right-setting"
+          class="relative text-gray-300 hover:text-white hover:bg-pink-900 rounded-lg p-1 mx-2"
+          @click="showProfileDetailMenu=!showProfileDetailMenu">
+          <img class="relative h-8 w-8 rounded-md" src="https://avatars.githubusercontent.com/u/11146767?v=4" alt="">
+          <i class="profile-status absolute fa-xs fa fa-circle border-pink-900" aria-hidden="true"></i>
+          <div v-show="showProfileDetailMenu"
+            class="profile-detail w-80 top-10 right-1 absolute flex flex-col bg-gray-100 rounded-lg mx-auto shadow-sm text-sm">
+            <div class="flex flex-col text-black border-b space-y-2">
+              <div class="p-4 flex flex-start space-x-2">
+                <img src="https://avatars.githubusercontent.com/u/11146767?v=4" alt="" class="h-10 w-10 rounded-md">
+                <div class="flex flex-col">
+                  <strong>yukihirop</strong>
+                  <p class="text-gray-500 text-xs">
+                    <i class="fa-xs fa fa-circle"></i>
+                    アクティブ
+                  </p>
+                </div>
+              </div>
+              <div class="px-4">
+                <button class="w-full pl-4 py-2 border rounded-md text-left bg-white">
+                  <i class="fa far fa-smile-wink"></i>
+                  ステータスを更新する
+                </button>
+              </div>
+              <div class="px-4 py-2 hover:bg-blue-500 hover:text-white">
+                ログイン状態を<strong>離席中</strong>に変更
+              </div>
+              <div class="px-4 py-2 hover:bg-blue-500 hover:text-white">
+                通知を一時的に停止する
+              </div>
+            </div>
+            <div class="border-b">
+              <div class="px-4 py-2 text-black hover:bg-blue-500 hover:text-white">
+                <i class="fa fa-camera" aria-hidden="true"></i>
+                プロフィールを編集
+              </div>
+              <div class="px-4 py-2 text-black hover:bg-blue-500 hover:text-white">プロフィールを表示する</div>
+              <div class="px-4 py-2 text-black hover:bg-blue-500 hover:text-white">環境設定</div>
+            </div>
+            <div class="p-4 flex flex-col text-black hover:bg-blue-500 hover:text-white mb-4">
+              <div>
+                以下からサインアウト: <small>yukihirop</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div id="slack-content" class="slack-content flex items-center justify-start">
+      <div id="slack-team"
+        class="flex flex-col justify-start h-full w-16 bg-pink-800 border-t border-r border-pink-200 text-white">
+        <template v-for="(team, index) in teams" :key="index">
+          <div class="m-3 rounded-lg slack-icon">
+            <a :href="team.url" target="_blank noreferer">
+              <img :src="team.image" class="rounded-md" />
+            </a>
+          </div>
+        </template>
+        <div class="rounded-lg text-gray-300 hover:bg-pink-900 p-1 mx-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 m-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </div>
+      </div>
+      <div id="slack-channel"
+        class="flex flex-col justify-start h-full w-80 bg-pink-800 border-t border-r border-pink-200">
+        <div id="slack-userinfo" class="h-12 flex justify-between items-center hover:bg-pink-900 p-2 border-b">
+          <span class="flex items-center">
+            <p class="font-bold text-white">
+              yukihirop
+            </p>
+            <div class="relative z-50" @click="clickProfileMenu">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+              <!-- プロフィールメニュー -->
+              <div id="profile-menu-dropdown" v-show="showProfileMenu"
+                class="w-60 flex flex-col items-center bg-gray-100 absolute rounded-lg -left-16 top-10 shadow">
+                <!-- プロフィール画像 -->
+                <div class="w-full flex items-center justify-start text-black border-b p-2 pl-3">
+                  <div class="w-10 h-10">
+                    <img src="https://avatars.githubusercontent.com/u/11146767?v=4" class="border" />
+                  </div>
+                  <div class="p-2 text-sm">
+                    <div class="font-bold">yukihirop</div>
+                    <div>yukihirop.slack.com</div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center justify-between border-b text-black text-xs p-4 hover:bg-blue-500 hover:text-white">
+                  <div>
+                    <div class="font-bold">メッセージ合計</div>
+                    <small>アップグレードして最初の5300件のメッセージにアクセスする。<a href="https://www.google.com/?hl=ja"
+                        class="font-bold text-blue-500 hover:text-white hover:underline">プランを参照</a></small>
+                  </div>
+                  <div class="slack-usage ml-2">
+                    <canvas class="w-16 h-16" id="usage-chart"></canvas>
+                    <span>1.5万</span>
+                  </div>
+                </div>
+                <div class="w-full text-sm border-b">
+                  <ul class="w-full text-sm py-1">
+                    <li class="py-1 px-4 hover:bg-blue-500 hover:text-white">メンバーを以下に招待: <small>yukihirop</small></li>
+                    <li class="py-1 px-4 hover:bg-blue-500 hover:text-white">チャンネルを作成する</li>
+                  </ul>
+                </div>
+                <div class="w-full text-sm border-b">
+                  <ul class="w-full py-1">
+                    <li class="px-4 py-1 flex justify-between hover:bg-blue-500 hover:text-white">
+                      <div>環境設定</div>
+                      <div>&#8984;,</div>
+                    </li>
+                    <li class="px-4 py-1 flex justify-between hover:bg-blue-500 hover:text-white">
+                      <div>設定と管理</div>
+                      <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="w-full text-sm border-b">
+                  <ul class="w-full py-1">
+                    <li class="px-4 py-1 flex justify-between hover:bg-blue-500 hover:text-white">
+                      <div>ツール</div>
+                      <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="w-full text-sm">
+                  <ul class="w-full py-1">
+                    <li class="px-4 py-1 hover:bg-blue-500 hover:text-white">
+                      <div>以下からサインアウト: <small>yukihirop</small></div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </span>
+          <div class="h-8 w-8 rounded-full bg-gray-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 m-1 text-pink-900" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </div>
+        </div>
+        <div id="slack-menu-and-channel">
+          <ul id="slack-menu" class="w-full text-sm text-gray-200">
+            <li class="w-full flex space-x-2 hover:bg-pink-900 p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+              </svg>
+              <p class="mx-1">スレッド</p>
+            </li>
+            <li class="w-full flex space-x-2 hover:bg-pink-900 p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+              </svg>
+              <p class="mx-1">メンション & リアクション</p>
+            </li>
+            <li class="w-full flex space-x-2 hover:bg-pink-900 p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+              </svg>
+              <p class="mx-1">ブックマーク</p>
+            </li>
+            <li class="w-full flex space-x-2 hover:bg-pink-900 p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+              </svg>
+              <p class="mx-1">Slackコネクト</p>
+            </li>
+            <li class="w-full flex space-x-2 hover:bg-pink-900 p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+              </svg>
+              <p class="mx-1">その他 </p>
+            </li>
+            <!-- スター付き -->
+            <li class="w-full flex space-x-2 hover:bg-pink-900 p-2 mt-2">
+              <template v-if="showStar">
+                <div @click="showStar = !showStar">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </div>
+              </template>
+              <template v-else>
+                <div @click="showStar = !showStar">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </div>
+              </template>
+              <p class="mx-1">スター付き</p>
+            </li>
+            <li>
+              <!-- スター付きのチャンネル -->
+              <ul v-show="showStar" class="w-full text-sm">
+                <li v-for="(chan, index) in starChannels" class="w-full flex space-x-2 hover:bg-pink-900 py-1 px-8">
+                  <span v-if="chan.private" class="flex items-center space-x-2">
+                    <span>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                          d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                          clip-rule="evenodd" />
+                      </svg>
+                    </span>
+                    <span class="mx-2">{{ chan.name }}</span>
+                  </span>
+                  <span v-else>
+                    <span class="ml-1">#</span>
+                    <span class="mx-3">{{ chan.name }}</span>
+                  </span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <ul id="slack-star">
+          </ul>
+        </div>
+      </div>
+      <div id="slack-chat" class="w-full h-full flex flex-col justify-between relative">
+        <div id="slack-chat-header" class="h-12 flex items-center justify-between py-2 pl-4 border-b">
+          <div class="flex items-center">
+            <i class="fas fa-lock"></i>
+            <span class="ml-2 font-bold text-black">study-web-design</span>
+          </div>
+          <button
+            class="rounded-md border flex items-center align-middle p-1 px-2 mr-2 hover:bg-gray-100 focus:outline-none"
+            @click="showChannelSetting=true">
+            <img class="w-6 h-6" src="https://avatars.githubusercontent.com/u/11146767?v=4" alt="">
+            <span class="px-1 text-xs">1</span>
+          </button>
+          <teleport to="#channel-setting">
+            <div class="modal-base-3" v-if="showChannelSetting">
+              <div class="overlay-3" @click="showChannelSetting=false"></div>
+              <div class="relative flex flex-col space-y-4 z-100 rounded-lg bg-white w-1/2">
+                <div id="modal-header" class="flex items-center justify-between px-4">
+                  <div class="flex items-center pt-4">
+                    <i class="fa fa-lock"></i>
+                    <h2 class="ml-2 text-xl">study-web-dezigin</h2>
+                  </div>
+                  <button class="w-8 h-8 leading-8 rounded-md hover:bg-gray-200" @click="showChannelSetting=false">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <div class="flex justify-start space-x-2 px-4">
+                  <button class="border text-xs rounded-md p-1 px-2 focus:outline-none">
+                    <i class="fa fa-bell"></i>
+                    通知を有効にする
+                  </button>
+                  <button class="bg-gray-300 text-xs text-black rounded-lg p-1 px-2 focus:outline-none">
+                    <i class="fa fa-phone"></i>
+                    通話を開始する
+                  </button>
+                </div>
+                <div id="modal-tabs" class="">
+                  <div id="modal-tabs-menu">
+                    <div class="tabbed">
+                      <input type="radio" name="channel-tabs" id="channel">
+                      <input type="radio" name="channel-tabs" id="member-1" checked>
+                      <input type="radio" name="channel-tabs" id="integration">
+                      <input type="radio" name="channel-tabs" id="config">
+
+                      <div class="divtabs border-b mb-4">
+                        <ul class="tabs flex justify-start space-x-4 px-4 text-sm text-semibold text-gray-800">
+                          <li class="tab"><label for="channel">チャンネル情報</label></li>
+                          <li class="tab"><label for="member-1">メンバー1</label></li>
+                          <li class="tab"><label for="integration">インテグレーション</label></li>
+                          <li class="tab"><label for="config">設定</label></li>
+                        </ul>
+                      </div>
+
+                      <!-- チャンネル情報 -->
+                      <div class="tab-content">
+                        <div class="mx-4 rounded-lg border">
+                          <div class="border-b p-4 hover:bg-gray-200">
+                            <h3 class="text-md font-semibold">
+                              トピック
+                            </h3>
+                            <p class="text-sm text-gray-500">トピックを追加する</p>
+                          </div>
+                          <div class="border-b p-4 hover:bg-gray-200">
+                            <h3 class="text-md font-semibold">
+                              説明
+                            </h3>
+                            <p class="text-sm text-gray-500">説明を追加する</p>
+                          </div>
+                          <div class="border-b p-4 hover:bg-gray-200">
+                            <h3 class="text-md font-semibold">
+                              作成者:
+                            </h3>
+                            <p class="text-sm text-gray-500">yukihiropさんが2021年６月1日に作成</p>
+                          </div>
+                          <div class="p-4 hover:bg-gray-200"><strong class=" text-md text-red-500">チャンネルから退出する</strong>
+                          </div>
+                        </div>
+                        <div class="m-4 pb-2 rounded-lg border">
+                          <h3 class="p-4 text-md font-semibold">ファイル</h3>
+                          <div class="hover:bg-gray-200">
+                            <div class="p-4 flex justify-start">
+                              <img class="w-10 h-10 p-1" src="https://avatars.githubusercontent.com/u/11146767?v=4"
+                                alt="">
+                              <div class="flex flex-col">
+                                <div class="text-semibold">image.png</div>
+                                <div class="flex justify-between">
+                                  <div class="text-xs text-semibold">yukihirop</div>
+                                  <div class="ml-2 text-xs text-gray-500">今日 11:22</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="hover:bg-gray-200">
+                            <div class="p-4 flex justify-start">
+                              <img class="w-10 h-10 p-1" src="https://avatars.githubusercontent.com/u/11146767?v=4"
+                                alt="">
+                              <div class="flex flex-col">
+                                <div class="text-semibold">image.png</div>
+                                <div class="flex justify-between">
+                                  <div class="text-xs text-semibold">yukihirop</div>
+                                  <div class="ml-2 text-xs text-gray-500">今日 11:22</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="hover:bg-gray-200">
+                            <div class="p-4 flex justify-start">
+                              <img class="w-10 h-10 p-1" src="https://avatars.githubusercontent.com/u/11146767?v=4"
+                                alt="">
+                              <div class="flex flex-col">
+                                <div class="text-semibold">image.png</div>
+                                <div class="flex justify-between">
+                                  <div class="text-xs text-semibold">yukihirop</div>
+                                  <div class="ml-2 text-xs text-gray-500">今日 11:22</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="hover:bg-gray-200">
+                            <div class="p-4 flex justify-start">
+                              <img class="w-10 h-10 p-1" src="https://avatars.githubusercontent.com/u/11146767?v=4"
+                                alt="">
+                              <div class="flex flex-col">
+                                <div class="text-semibold">image.png</div>
+                                <div class="flex justify-between">
+                                  <div class="text-xs text-semibold">yukihirop</div>
+                                  <div class="ml-2 text-xs text-gray-500">今日 11:22</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <a href="#" class="p-4 text-blue-500 text-sm font-bold">もっと表示する</a>
+                        </div>
+                      </div>
+                      <!-- メンバー1 -->
+                      <div class="tab-content flex justify-start space-y-4">
+                        <div class="px-4 pb-2">
+                          <div
+                            class="flex justify-start items-center w-full rounded-md border focus:ring focus:border-blue-300">
+                            <i class="ml-2 fa fa-search text-gray-500"></i>
+                            <input type="text" placeholder="メンバーを検索"
+                              class="ml-1 px-2 py-1 w-11/12 focus:outline-none"></input>
+                          </div>
+                        </div>
+                        <div class="flex flex-col">
+                          <div class="flex justify-start items-center p-4 hover:bg-gray-100">
+                            <button class="w-8 h-8 leading-8 rounded-md bg-blue-100">
+                              <i class="fa fa-user-plus"></i>
+                            </button>
+                            <strong class="ml-2">メンバーを追加する</strong>
+                          </div>
+                          <div class="flex justify-start items-center p-4 hover:bg-gray-100">
+                            <button class="w-8 h-8 leading-8 rounded-md bg-blue-100">
+                              <img src="https://avatars.githubusercontent.com/u/11146767?v=4" alt="">
+                            </button>
+                            <strong class="ml-2">yukihirop (自分)</strong>
+                            <div class="rounded-full w-2 h-2 bg-green-700 text-center ml-2"></div>
+                            <p class="ml-2">
+                              yukihirop
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- インテグレーション -->
+                      <div class="tab-content">
+                        <div class="m-4">
+                          <div class="flex flex-col space-y-4">
+                            <div class="rounded-lg border p-4 space-y-2">
+                              <h2 class="text-md font-semibold">
+                                ワークフロー
+                                <span
+                                  class="bg-blue-100 text-blue-500 rounded-lg text-xs ml-1 p-1 font-semibold">有料機能</span>
+                              </h2>
+                              <p>チーム独自のタスクやプロセスを自動化できます。コーディングの作業は不要です。</p>
+                              <button
+                                class="px-2 py-1 text-sm font-semibold border rounded-md hover:bg-gray-200">アップグレードのオプションを表示する</button>
+                            </div>
+                            <div class="flex rounded-lg border">
+                              <div class="p-4 space-y-2">
+                                <h2 class="text-md font-semibold">App</h2>
+                                <p class="break-words">必要なツールをこのチャンネルに組み込んで、レポートの作成開始、チケットのファイリングなどを行えます。</p>
+                                <button
+                                  class="px-2 py-1 text-sm font-semibold border rounded-md hover:bg-gray-200">アプリを追加する</button>
+                              </div>
+                              <img class="flex-grow w-40 h-40 rounded-r-lg"
+                                src="https://a.slack-edge.com/079faee/img/ia-details/apps-empty@2x.png" alt="">
+                            </div>
+                            <div class="rounded-lg border p-4 space-y-2">
+                              <h2 class="text-md font-semibold">
+                                このチャンネルにメールを送信する
+                                <span
+                                  class="bg-blue-100 text-blue-500 rounded-lg text-xs ml-1 p-1 font-semibold">有料機能</span>
+                              </h2>
+                              <p>受信したメールをこのチャンネルに投稿できるメールアドレスを取得できます。</p>
+                              <button
+                                class="px-2 py-1 text-sm font-semibold border rounded-md hover:bg-gray-200">アップグレードオプションを表示する</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- 設定 -->
+                      <div class="tab-content">
+                        <div class="m-4">
+                          <div class="flex flex-col space-y-4">
+                            <div class="w-full flex flex-col p-4 rounded-lg hover:bg-gray-100 border">
+                              <h2 class="text-md font-semibold">チャンネル名</h2>
+                              <span>
+                                <i class="fa fa-lock"></i>
+                                <span class="ml-1 text-gray-500">study-web-design</span>
+                              </span>
+                            </div>
+                            <div class="flex rounded-lg border">
+                              <div class="p-4 space-y-2">
+                                <h2 class="text-md font-semibold">
+                                  Slackコネクト
+                                  <span
+                                    class="bg-blue-100 text-blue-500 rounded-lg text-xs ml-1 p-1 font-semibold">有料機能</span>
+                                </h2>
+                                <p>このチャンネルで、他の会社や組織のメンバーと一緒に仕事を進めます。<a class="text-blue-500" href="#">もっと詳しく</a></p>
+                                <button
+                                  class="px-2 py-1 rounded-md border text-sm font-semibold hover:bg-gray-200">アップグレードのオプションを表示する</button>
+                              </div>
+                              <img src="https://a.slack-edge.com/079faee/img/ia-details/apps-empty@2x.png" alt=""
+                                class="flex-grow w-40 h-40 rounded-r-lg">
+                            </div>
+                            <div class="flex flex-col rounded-lg border">
+                              <div class="w-full hover:bg-gray-100 hover:rounded-lg">
+                                <div class="flex p-4 border-b">
+                                  <i class="fa far fa-trash-alt text-red-500"></i>
+                                  <span class="ml-2 text-sm font-bold text-red-500">全員に対してチャンネルをアーカイブする</span>
+                                </div>
+                              </div>
+                              <div class="w-full hover:bg-gray-100 hover:rounded-lg">
+                                <div class="flex p-4">
+                                  <i class="fa far fa-trash-alt text-red-500"></i>
+                                  <span class="ml-2 text-sm font-bold text-red-500">このチャンネルを削除する</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </teleport>
+        </div>
+        <div id="slack-chat-content" class="h-full overflow-y-auto">
+          <!-- ヘッダー -->
+          <div id="slack-chat-content-header" class="h-44 items-center py-2 pl-4">
+            <div id="slack-chat-content-header-title" class="flex items-center pt-10">
+              <i class="fas fa-lock"></i>
+              <div class="ml-2 font-bold text-black text-lg py-2">study-web-design</div>
+            </div>
+            <div class="px-2">6月1日、あなたがこのプライベートチャンネルを作成しました。どんどん活用していきましょう！</div>
+            <div id="slack-chat-content-action" class="flex space-x-4 items-center px-2 py-4">
+              <div class="flex items-center" @click="showAddDescModal = true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 cursor-pointer text-blue-500" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+                <span href="#" class="ml-2 cursor-pointer text-blue-500">
+                  説明を追加する
+                </span>
+              </div>
+              <!-- 説明を追加するをクリックした時に表示されるモーダル -->
+              <teleport to="#adddesc">
+                <div class="modal-base mt-50" v-if="showAddDescModal">
+                  <div class="overlay" @click="showAddDescModal=false">
+                  </div>
+                  <div
+                    class="flex flex-col w-1/3 h-80 justify-between relative bg-white p-4 rounded-lg top-1/3 mx-auto">
+                    <!-- タイトル -->
+                    <div class="w-full flex flex-row justify-between items-center">
+                      <h1 class="text-xl font-bold">説明を編集</h1>
+                      <button class="w-8 h-8 leading-8 rounded-lg text-center hover:bg-gray-300 focus:outline-none"
+                        @click="showAddDescModal=false"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </div>
+                    <!-- 説明を追加 -->
+                    <div>
+                      <textarea class="w-full h-32 border resize-none p-2 rounded-lg border-gray-500"
+                        placeholder="説明を追加" cols="30" rows="10"></textarea>
+                      <small class="text-gray-500">このチャンネルの目的を入力できます。</small>
+                    </div>
+                    <div class="mt-4 flex justify-end space-x-2">
+                      <button class="p-1 px-2 border rounded-md font-semibold hover:bg-gray-100 focus:outline-none"
+                        @click="showAddDescModal=false">キャンセル</button>
+                      <button
+                        class="w-20 p-1 bg-green-700 text-white rounded-md font-semibold hover:bg-green-600 focus:outline-none">保存</button>
+                    </div>
+                  </div>
+                </div>
+              </teleport>
+              <div class="flex items-center" @click="showAddMemberModal = true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 cursor-pointer text-blue-500" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+                <span class="ml-2 cursor-pointer text-blue-500">メンバーを追加する</span>
+              </div>
+              <!-- メンバーを追加するをクリックした時に表示されるモーダル -->
+              <teleport to="#addmember">
+                <div class="modal-base-2" v-if="showAddMemberModal">
+                  <div class="overlay-2" @click="showAddMemberModal=false"></div>
+                  <div class="w-1/3 z-50 bg-white rounded-lg flex flex-col items-center p-4 space-y-4">
+                    <div class="flex justify-between space-x-2">
+                      <h1 class="text-xl font-semibold w-11/12">追加されたユーザーは誰でも、チャンネルのコンテンツをすべて閲覧できるようになります。</h1>
+                      <button class="w-8 h-8 leading-8 rounded-md text-center hover:bg-gray-300"
+                        @click="showAddMemberModal=false"><i class="fa fa-times"></i></button>
+                    </div>
+                    <p>新しいメンバーは、チャンネル内で共有されたファイルを含め、study-web-designの履歴をすべて閲覧できるようになります。代わりに、新しいチャンネルを作成することも可能です。
+                    </p>
+                    <fieldset class="w-full flex flex-col space-y-4">
+                      <div class="align-middle">
+                        <label class="flex" for="add-channel">
+                          <input type="radio" name="select-channel" id="add-channel" />
+                          <span class="-mt-0.5 ml-2 text-sm text-left">
+                            <strong>study-web-designに追加</strong>
+                            <br />
+                            新しいメンバーを既存のチャンネルに追加します
+                          </span>
+                        </label>
+                      </div>
+                      <div class="align-middle">
+                        <label class="flex" for="new-channel">
+                          <input type="radio" name="select-channel" id="new-channel" />
+                          <span class="-mt-1 ml-2 text-sm">
+                            <strong class="text-base">新しいチャンネルを作成する</strong>
+                            <br>
+                            Slackが既存のチャンネルをアーカイブし、そのチャンネルのメンバー全員を自動的に新しいチャンネルへと招待します。
+                          </span>
+                        </label>
+                      </div>
+                    </fieldset>
+                    <div class="w-full flex justify-end space-x-2">
+                      <button
+                        class="font-semibold text-sm w-30 border hover:bg-gray-100 p-2 rounded-md focus:outline-none"
+                        @click="showAddMemberModal=false">キャンセル</button>
+                      <button
+                        class="font-semibold text-white bg-green-700 hover:bg-green-600 p-2 rounded-md focus:outline-none">続行する</button>
+                    </div>
+                  </div>
+                </div>
+              </teleport>
+            </div>
+          </div>
+          <!-- メッセージ -->
+          <div v-for="(message, index) in messages" :key="index"
+            class="w-full flex flex-col items-center justify-between">
+            <!-- 今日 -->
+            <div class="w-full flex items-center relative">
+              <hr class="w-full" />
+            </div>
+            <div
+              class="w-16 p-1 flex flex-row items-center justify-center sticky sticky-today top-5 left-1/2 rounded-lg border bg-white">
+              <button class="text-sm font-semibold border-gray-300 focus:outline-none">今日 <i
+                  class="fa-xs fas fa-chevron-down"></i></button>
+            </div>
+            <!-- メッセージ -->
+            <div class="w-full flex flex-row items-center px-4 hover:bg-gray-200">
+              <div class="flex flex-col items-center">
+                <img :src="message.image" class="w-10 h-10">
+              </div>
+              <div class="flex flex-col h-20 ml-4 pt-4">
+                <div>
+                  <span class="font-semibold hover:underline">{{ message.username }}</span>
+                  <span class="ml-2 text-xs text-gray-500">{{ message.send_at }}</span>
+                </div>
+                <div>
+                  {{ message.message }}
+                </div>
+              </div>
+            </div>
+            <!-- ダミー -->
+            <div class="w-full h-6"></div>
+          </div>
+        </div>
+        <div id="slack-chat-rich-text" class="min-h-40 bg-white p-4">
+          <div contenteditable="true"
+            class="min-h-20 rounded-t-lg border border-b-0 border-gray-400 focus:outline-none p-2 overflow-y-scroll">
+          </div>
+          <div id="slack-chat-rich-text-action"
+            class="flex justify-between items-center rounded-b-lg border border-t-0 border-gray-400 bg-gray-50 p-2">
+            <div id="slack-chat-rich-text-action-left" class="flex justify-start flex-wrap">
+              <button v-for="(richText, index) in richTextCommands" :key="index"
+                class="w-6 h-6 rounded-sm text-gray-200 hover:bg-gray-200 hover:text-gray-800 focus:outline-none">
+                <i class="fa-sm" :class="richText.icon"></i>
+              </button>
+            </div>
+            <div id="slack-chat-rich-text-action-right" class="flex justify-end flex-wrap">
+              <button v-for="(menu, index) in richTextMenus" :key="index"
+                class="w-6 h-6 rounded-sm text-gray-200 hover:bg-gray-200 hover:text-gray-800 focus:outline-none"
+                :class="[{'hover:bg-green-500': menu.submit }, {'hover:text-white': menu.submit}]">
+                <i class="fa-sm"
+                  :class="[menu.icon, { 'text-black': menu.active }, { 'hover:text-white': menu.submit }]"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="slack-separator"></div>
+      <div v-if="showHelp" class="w-2/5 h-full flex flex-col justify-between border">
+        <div id="slack-help-header" class="h-12 flex items-center justify-between py-2 pl-4 border-b">
+          <div class="flex items-center">
+            <span class="font-bold text-black">ヘルプ</span>
+          </div>
+          <div class="flex flex-start items-center justify text-gray">
+            <button class="rounded-md flex items-center align-middle p-2 mr-2 hover:bg-gray-100 focus:outline-none">
+              <i class="fa fa-keyboard" aria-hidden="true"></i>
+            </button>
+            <button class="rounded-md flex items-center align-middle p-2 mr-2 hover:bg-gray-100 focus:outline-none">
+              <i class="fa fa-gift"></i>
+            </button>
+            <button class="rounded-md flex items-center align-middle p-2 mr-2 hover:bg-gray-100 focus:outline-none"
+              @click="showHelp=false">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div id="slack-help-content" class="m-2 h-full flex flex-col justify-between">
+          コンテンツ
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 説明を追加するをクリックした時に表示されるモーダル -->
+  <div id="adddesc"></div>
+  <!-- メンバーを追加するをクリックした時に表示されるモーダル -->
+  <div id="addmember"></div>
+  <div id="channel-setting"></div>
+</body>
+
+<style>
+  .modal-base {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background-color: gray;
+    opacity: .5;
+  }
+
+  .slack-content {
+    height: calc(100vh - 2.5rem);
+  }
+
+  .slack-icon:hover {
+    box-shadow: 0 0 0 3px rgba(157, 23, 77), 0 0 0 6px rgba(251, 207, 232);
+    box-sizing: border-box;
+  }
+
+  .slack-usage {
+    position: relative
+  }
+
+  .slack-usage span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    vertical-align: middle;
+    transform: translate(-50%, -50%);
+  }
+
+  .sticky-today {
+    transform: translate(-50%, -50%);
+  }
+
+  .modal-base-2 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+  }
+
+  .overlay-2 {
+    position: fixed;
+    inset: 0;
+    background-color: gray;
+    opacity: .5;
+  }
+
+  .modal-base-3 {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+  }
+
+  .overlay-3 {
+    position: fixed;
+    inset: 0;
+    background-color: gray;
+    opacity: .5;
+  }
+
+  .tabbed {
+    overflow-x: hidden;
+  }
+
+  .tabbed [type="radio"] {
+    display: none;
+  }
+
+  .tab>label {
+    display: block;
+    cursor: pointer;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tabbed [type="radio"]:nth-of-type(1):checked~.tab-content:nth-of-type(2),
+  .tabbed [type="radio"]:nth-of-type(2):checked~.tab-content:nth-of-type(3),
+  .tabbed [type="radio"]:nth-of-type(3):checked~.tab-content:nth-of-type(4),
+  .tabbed [type="radio"]:nth-of-type(4):checked~.tab-content:nth-of-type(5) {
+    display: block;
+  }
+
+  .tabbed [type="radio"]:nth-of-type(1):checked~.divtabs .tabs .tab:nth-of-type(1) label,
+  .tabbed [type="radio"]:nth-of-type(2):checked~.divtabs .tabs .tab:nth-of-type(2) label,
+  .tabbed [type="radio"]:nth-of-type(3):checked~.divtabs .tabs .tab:nth-of-type(3) label,
+  .tabbed [type="radio"]:nth-of-type(4):checked~.divtabs .tabs .tab:nth-of-type(4) label {
+    border-bottom: 2px solid;
+    border-bottom-color: green;
+  }
+
+  .search-form {
+    z-index: 1000;
+    transform: translateX(-50%);
+  }
+
+  .message-file {
+    display: none;
+  }
+
+  .message-file:hover {
+    display: inline;
+  }
+
+  .profile-status {
+    top: 28px;
+    right: 8px;
+  }
+
+  .profile-detail {
+    z-index: 99999;
+  }
+
+</style>
+
+</html>
+
+<script>
+  const app = Vue.createApp({
+    mounted() {
+      const config = {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [25, 75],
+            backgroundColor: [
+              'rgb(255, 165, 0)',
+              'rgb(255, 38, 0)',
+            ],
+            // https://techracho.bpsinc.jp/_koyama/2018_12_22/67199
+            borderColor: 'transparent'
+          }],
+        },
+        options: {
+          // https://www.it-swarm-ja.com/ja/javascript/chartjs%E3%83%9B%E3%83%90%E3%83%BC%E3%81%A7%E3%81%99%E3%81%B9%E3%81%A6%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95/830269239/
+          tooltips: { enabled: false },
+          hover: { mode: null },
+          segmentShowStroke: false,
+          // https://www.it-swarm-ja.com/ja/javascript/chartjs%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%A6%E3%83%89%E3%83%BC%E3%83%8A%E3%83%84%E3%83%81%E3%83%A3%E3%83%BC%E3%83%88%E3%81%AE%E5%A4%AA%E3%81%95%E3%82%92%E5%A4%89%E3%81%88%E3%82%8B%E6%96%B9%E6%B3%95%E3%81%AF%EF%BC%9F/1044145283/
+          cutoutPercentage: 80,
+          legend: {
+            display: false
+          }
+        },
+      };
+
+      window.onload = function () {
+        var ctx = document.getElementById('usage-chart').getContext('2d');
+        new Chart(ctx, config);
+      };
+    },
+    methods: {
+      clickProfileMenu() {
+        this.showProfileMenu = !this.showProfileMenu
+      }
+    },
+    data() {
+      return {
+        showHelp: false,
+        showProfileDetailMenu: false,
+        showSearchForm: false,
+        showChannelSetting: false,
+        showAddMemberModal: false,
+        showAddDescModal: false,
+        richTextMenus: [
+          {
+            icon: 'fas fa-font',
+            active: false,
+          },
+          {
+            icon: 'fas fa-at',
+            active: true,
+          },
+          {
+            icon: 'far fa-smile-wink',
+            active: true
+          },
+          {
+            icon: 'fas fa-paperclip',
+            active: true
+          },
+          {
+            icon: 'fa fa-paper-plane',
+            active: false,
+            submit: true
+          }
+        ],
+        richTextCommands: [
+          {
+            icon: 'fas fa-bold',
+            cmd: 'bold'
+          },
+          {
+            icon: 'fas fa-italic',
+            cmd: 'italic'
+          },
+          {
+            icon: 'fas fa-strikethrough',
+            cmd: 'strikeThrough'
+          },
+          {
+            icon: 'fas fa-code',
+            cmd: 'formatBlock'
+          },
+          {
+            icon: 'fas fa-link',
+            cmd: 'craeteLink'
+          },
+          {
+            icon: 'fas fa-list-ol',
+            cmd: 'insertOrderedList'
+          },
+          {
+            icon: 'fas fa-list-ul',
+            cmd: 'insertUnorderedList'
+          },
+          {
+            icon: 'fas fa-quote-right',
+            cmd: 'formatBlock'
+          }
+        ],
+        messages: [
+          ...[...Array(20)].map((_, i) => ({
+            id: i + 1,
+            username: 'yukihirop',
+            image: 'https://pbs.twimg.com/profile_images/874463635950551040/IhlhyWsq_400x400.jpg',
+            message: 'study-web-designに参加しました',
+            send_at: '20:50'
+          }))
+        ],
+        showProfileMenu: false,
+        starChannels: [
+          {
+            id: 1,
+            name: 'anime',
+            private: false,
+          },
+          {
+            id: 2,
+            name: 'babel',
+            private: false,
+          },
+          {
+            id: 3,
+            name: 'study-web-design',
+            private: true,
+          },
+          {
+            id: 4,
+            name: 'ci-notify',
+            private: true,
+          }
+        ],
+        showStar: false,
+        menus: [
+          {
+            id: 1,
+            url: 'https://www.google.com/?hl=ja',
+            key: 'thread',
+            name: 'スレッド'
+          },
+          {
+            id: 2,
+            key: 'mention',
+            name: 'メンション & リアクション'
+          },
+          {
+            id: 3,
+            url: 'https://www.google.com/?hl=ja',
+            key: 'bookmark',
+            name: 'ブックマーク'
+          },
+          {
+            id: 4,
+            url: 'https://www.google.com/?hl=ja',
+            key: 'connect',
+            name: 'Slackコネクト'
+          }
+        ],
+        channels: [
+          {
+            id: 1,
+            url: 'https://www.google.com/?hl=ja',
+            name: ''
+          }
+        ],
+        teams: [
+          {
+            id: 1,
+            url: 'https://www.google.com/?hl=ja',
+            image: 'https://pbs.twimg.com/profile_images/874463635950551040/IhlhyWsq_400x400.jpg'
+          },
+          {
+            id: 2,
+            url: 'https://www.google.com/?hl=ja',
+            image: 'https://pbs.twimg.com/profile_images/874463635950551040/IhlhyWsq_400x400.jpg'
+          },
+          {
+            id: 3,
+            url: 'https://www.google.com/?hl=ja',
+            image: 'https://pbs.twimg.com/profile_images/874463635950551040/IhlhyWsq_400x400.jpg'
+          },
+          {
+            id: 3,
+            url: 'https://www.google.com/?hl=ja',
+            image: 'https://pbs.twimg.com/profile_images/874463635950551040/IhlhyWsq_400x400.jpg'
+          },
+          {
+            id: 3,
+            url: 'https://www.google.com/?hl=ja',
+            image: 'https://pbs.twimg.com/profile_images/874463635950551040/IhlhyWsq_400x400.jpg'
+          }
+        ]
+      }
+    }
+  })
+
+  app.mount('#app')
+</script>

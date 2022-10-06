@@ -1,0 +1,7 @@
+{
+  "name": "web-develop-practice",
+  "packageManager": "yarn@3.2.3",
+  "scripts": {
+    "deploy:slack": "cp -r slack/index.html docs/slack/index.html"
+  }
+}
